@@ -10,7 +10,15 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	/**
+	 * KV namespace used to store the Steam ID bound to a Telegram chat.
+	 * Create it with: npx wrangler kv namespace create USERS
+	 * and put the returned id below.
+	 */
+	"kv_namespaces": [
+		{ "binding": "USERS", "id": "d93fb68207fb4a49882def52f1c9c159" }
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
