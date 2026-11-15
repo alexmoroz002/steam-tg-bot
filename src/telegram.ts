@@ -30,20 +30,31 @@ async function callTelegram<T>(
 	method: string,
 	payload: Record<string, unknown>,
 ): Promise<T> {
-	const response = await fetch(
-		`${TELEGRAM_API}/bot${env.TELEGRAM_BOT_TOKEN}/${method}`,
-		{
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify(payload),
-		},
-	);
+	const token = env.TELEGRAM_BOT_TOKEN;
 
-	const data = (await response.json()) as TelegramResponse<T>;
+	if (!token) {
+		throw new Error("TELEGRAM_BOT_TOKEN is not configured");
+	}
 
-	if (!response.ok || !data.ok) {
+	const response = await fetch(`${TELEGRAM_API}/bot${token}/${method}`, {
+		method: "POST",
+		headers: { "content-type": "application/json" },
+		body: JSON.stringify(payload),
+	});
+
+	const rawBody = await response.text();
+	let data: TelegramResponse<T> | null = null;
+
+	try {
+		data = JSON.parse(rawBody) as TelegramResponse<T>;
+	} catch {
+		data = null;
+	}
+
+	if (!response.ok || !data?.ok) {
+		const details = data?.description ?? rawBody.slice(0, 300);
 		throw new Error(
-			`Telegram ${method} failed: ${data.description ?? response.statusText}`,
+			`Telegram ${method} failed: HTTP ${response.status}${details ? ` — ${details}` : ""}`,
 		);
 	}
 

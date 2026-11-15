@@ -232,7 +232,11 @@ async function handleUpdate(env: Env, update: TelegramUpdate): Promise<void> {
 
 		await handleQuery(env, chatId, state.steamId, text);
 	} catch (error) {
-		console.error("Failed to handle Telegram update", error);
+		console.error(
+			"Failed to handle Telegram update:",
+			error instanceof Error ? `${error.name}: ${error.message}` : String(error),
+			error instanceof Error ? error.stack : undefined,
+		);
 
 		try {
 			await sendMessage(
@@ -241,7 +245,12 @@ async function handleUpdate(env: Env, update: TelegramUpdate): Promise<void> {
 				"Не удалось обработать запрос. Попробуйте позже.",
 			);
 		} catch (sendError) {
-			console.error("Failed to send error message", sendError);
+			console.error(
+				"Failed to send error message:",
+				sendError instanceof Error
+					? `${sendError.name}: ${sendError.message}`
+					: String(sendError),
+			);
 		}
 	}
 }
