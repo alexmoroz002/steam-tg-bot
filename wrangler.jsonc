@@ -17,7 +17,10 @@
 	 * and put the returned id below.
 	 */
 	"kv_namespaces": [
-		{ "binding": "USERS", "id": "d93fb68207fb4a49882def52f1c9c159" }
+		{
+			"binding": "USERS",
+			"id": "d93fb68207fb4a49882def52f1c9c159"
+		}
 	]
 	/**
 	 * Smart Placement
